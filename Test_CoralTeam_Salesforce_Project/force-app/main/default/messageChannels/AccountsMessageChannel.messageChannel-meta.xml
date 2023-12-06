@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LightningMessageChannel xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>This is a sample Lightning Message Channel for the Lightning Web Components Superbadge.</description>
+    <description>This is a sample Lightning Message Channel for the Account's details display</description>
     <isExposed>true</isExposed>
     <lightningMessageFields>
-        <description>This is the record Id that changed</description>
         <fieldName>recordId</fieldName>
+        <description>This is the record Id that was selected</description>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <fieldName>recordType</fieldName>
+        <description>The type of record that was selected</description>
     </lightningMessageFields>
     <masterLabel>AccountsMessageChannel</masterLabel>
 </LightningMessageChannel>
