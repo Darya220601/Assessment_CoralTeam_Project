@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <classAccesses>
+        <apexClass>AccountController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     <description>Give access to all Accounts and Contacts</description>
     <fieldPermissions>
         <editable>true</editable>
@@ -326,4 +330,8 @@
         <object>Contact</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
+    <tabSettings>
+        <tab>Accounts_and_Contacts</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
 </PermissionSet>
