@@ -1,3 +1,7 @@
 <template>
-    
+    <lightning-card title="Available Account" class="slds-m-around_medium">
+        <div class="slds-p-around_medium lgc-bg">
+            <lightning-tree items={treeItems} onselect={handleTreeSelect}></lightning-tree>
+        </div>
+    </lightning-card>
 </template>
