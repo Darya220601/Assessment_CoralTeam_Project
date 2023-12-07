@@ -1,0 +1,31 @@
+.card-container {
+    padding: 20px;
+}
+
+.account-section,
+.contact-section {
+    margin-bottom: 20px;
+    margin-top:30px;
+}
+
+div.container {
+    margin-left: 20px;
+}
+.header {
+    font-weight: bold;
+    font-size: medium;
+    margin-bottom: 10px;
+}
+
+.gray-text {
+    color:#6B6B6B;
+}
+
+.label-text {
+    color: #6B6B6B;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+}

@@ -88,10 +88,6 @@ export default class Summary extends LightningElement {
         );
     }
 
-    get typeIsAccount() {
-        return this.type === ACCOUNT_TYPE;
-    }
-
     get typeIsContact() {
         return this.type === CONTACT_TYPE;
     }
