@@ -25,7 +25,7 @@ public with sharing class AccountController {
                                        LastName 
                                 FROM Contacts) 
                         FROM Account];
-        } else if(isBusinessUser) {
+        } else if (isBusinessUser) {
             accounts = [SELECT Id, 
                                Name, 
                                (SELECT Id, 
