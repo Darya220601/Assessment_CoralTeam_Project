@@ -26,7 +26,6 @@ export default class AvailableAccounts extends LightningElement {
     wiredTree({ error, data }) {
         if (data) {
             this.treeItems = data;
-            console.log('data is exists');
             console.log(this.treeItems);
         } else if (error) {
             console.log(error);

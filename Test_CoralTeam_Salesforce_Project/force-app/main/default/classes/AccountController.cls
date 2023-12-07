@@ -66,13 +66,8 @@ public with sharing class AccountController {
 
         assignPermissionSets();
 
-          System.debug('dar: ' + permissionSetNames);
-            System.debug('dar: ' + adminPermissionSet);
-            System.debug('dar: ' + businessPermissionSet);
         isAdminUser = adminPermissionSet != null && permissionSetNames.contains(adminPermissionSet.QualifiedApiName);
         isBusinessUser = businessPermissionSet != null && permissionSetNames.contains(businessPermissionSet.QualifiedApiName);
-        System.debug('dar: ' + isAdminUser);
-         System.debug('dar: ' + isBusinessUser);
 
         return isBusinessUser ? 'business' : (isAdminUser ? 'admin' : null);
     }
@@ -125,7 +120,6 @@ public with sharing class AccountController {
             result.put('accountData', getAccountInfoFromContact(recordId));
             result.put('contactData', getContactInfo(recordId));
         }
-        System.debug('Dar ' + result);
         return result;
     }
 

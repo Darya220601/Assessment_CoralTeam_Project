@@ -3,12 +3,10 @@ import ACCOUNT_CONTACT_CHANNEL from '@salesforce/messageChannel/AccountsMessageC
 import { subscribe, unsubscribe, APPLICATION_SCOPE, MessageContext } from 'lightning/messageService';
 import { reduceErrors } from 'c/ldsUtils';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import { getRecord } from 'lightning/uiRecordApi';
 import getRecordData from '@salesforce/apex/AccountController.getRecordData';
 
 const ERROR_TITLE   = 'Error';
 const ERROR_VARIANT = 'error';
-const ACCOUNT_TYPE = 'Account';
 const CONTACT_TYPE = 'Contact';
 
 export default class Summary extends LightningElement {
@@ -39,7 +37,6 @@ export default class Summary extends LightningElement {
     }
 
     handleSubscribe() {
-        console.log('from subcr');
         if (this.subscription) {
             return;
         }
@@ -54,8 +51,6 @@ export default class Summary extends LightningElement {
                 this.recordId = message.recordId;
                 this.type = message.type; 
                 this.loadData()
-                console.log('before data load');
-                console.log('after data load' + this.data);
             },
             { 
                 scope: APPLICATION_SCOPE
@@ -70,8 +65,6 @@ export default class Summary extends LightningElement {
        
     connectedCallback() {
         this.handleSubscribe();
-        console.log(' before mydata:' + this.data);
-        console.log(' mydata:' + this.data);
     }
 
     disconnectedCallback() {
