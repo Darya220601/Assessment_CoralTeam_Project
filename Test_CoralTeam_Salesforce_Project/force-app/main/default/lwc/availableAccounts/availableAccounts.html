@@ -1,7 +1,12 @@
 <template>
     <lightning-card title="Available Account" class="slds-m-around_medium">
         <div class="slds-p-around_medium lgc-bg">
-            <lightning-tree items={treeItems} onselect={handleTreeSelect}></lightning-tree>
+            <template if:true={hasNoAccounts}>
+                <p class="slds-m-vertical_medium">{noAccountsMessage}</p>
+            </template>
+            <template if:false={hasNoAccounts}>
+                <lightning-tree items={treeItems} onselect={handleTreeSelect}></lightning-tree>
+            </template>
         </div>
     </lightning-card>
 </template>

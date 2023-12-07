@@ -4,14 +4,19 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { publish, MessageContext } from 'lightning/messageService';
 import ACCOUNT_CONTACT_CHANNEL from '@salesforce/messageChannel/AccountsMessageChannel__c';
 import getAccountContactTree from '@salesforce/apex/AccountController.getAccountContactTree';
+import getUserPermissionSetNames from '@salesforce/apex/AccountController.getUserPermissionSetNames';
 
 const ERROR_TITLE   = 'Error';
 const ERROR_VARIANT = 'error';
+const NO_ACCOUNTS_MESSAGE = 'You have Business permissions, but there are no available accounts.';
+const BUSINESS_USER = 'business';
+
 
 export default class AvailableAccounts extends LightningElement {
     treeItems = [];
     selectedItem = null;
     error;
+    hasBusinessUserPermission = null;
 
     @wire(MessageContext)
     messageContext;
@@ -34,6 +39,18 @@ export default class AvailableAccounts extends LightningElement {
                  })
              );
         }
+    }
+
+    connectedCallback() {
+        getUserPermissionSetNames()
+            .then(result => {
+                this.hasBusinessUserPermission = result;
+                console.log(this.hasBusinessUserPermission);
+                console.log('User Permission Set Information:', result);
+            })
+            .catch(error => {
+                console.error('Error fetching user permission set information:', error);
+            });
     }
 
     handleTreeSelect(event) {
@@ -65,5 +82,16 @@ export default class AvailableAccounts extends LightningElement {
             }
         }
         return null;
+    }
+
+    get hasNoAccounts() {
+        return (
+            this.treeItems.length === 0  &&
+            this.hasBusinessUserPermission === BUSINESS_USER
+        );    
+    }
+
+    get noAccountsMessage() {
+        return NO_ACCOUNTS_MESSAGE;
     }
 }

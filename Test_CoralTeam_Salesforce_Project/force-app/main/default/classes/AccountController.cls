@@ -5,15 +5,15 @@ public with sharing class AccountController {
 
     public static User_Permission_Set__mdt adminPermissionSet { get; private set; }
     public static User_Permission_Set__mdt businessPermissionSet { get; private set; }
+    public static Boolean isAdminUser { get; private set; }
+    public static Boolean isBusinessUser { get; private set; }
+
 
     @AuraEnabled(cacheable=true)
     public static List<AccountWrapper> getAccountContactTree() {
         List<AccountWrapper> accWrapper = new List<AccountWrapper>();
 
-        Set<String> userPermissionSetNames = getUserPermissionSetNames(UserInfo.getUserId());
-        assignPermissionSets();
-        Boolean isAdminUser = adminPermissionSet != null && userPermissionSetNames.contains(adminPermissionSet.QualifiedApiName);
-        Boolean isBusinessUser = businessPermissionSet != null && userPermissionSetNames.contains(businessPermissionSet.QualifiedApiName);
+        getUserPermissionSetNames();
 
         List<Account> accounts = new List<Account>();
         if (isAdminUser) {
@@ -50,20 +50,31 @@ public with sharing class AccountController {
         return accWrapper;
     }
 
-    private static Set<String> getUserPermissionSetNames(Id userId) {
+    @AuraEnabled(cacheable=true)
+    public static String getUserPermissionSetNames() {
         Set<String> permissionSetNames = new Set<String>();
 
         List<PermissionSetAssignment> assignments = [
             SELECT PermissionSet.Name
             FROM PermissionSetAssignment
-            WHERE AssigneeId = :userId
+            WHERE AssigneeId = :UserInfo.getUserId()
         ];
 
         for (PermissionSetAssignment assignment : assignments) {
             permissionSetNames.add(assignment.PermissionSet.Name);
         }
 
-        return permissionSetNames;
+        assignPermissionSets();
+
+          System.debug('dar: ' + permissionSetNames);
+            System.debug('dar: ' + adminPermissionSet);
+            System.debug('dar: ' + businessPermissionSet);
+        isAdminUser = adminPermissionSet != null && permissionSetNames.contains(adminPermissionSet.QualifiedApiName);
+        isBusinessUser = businessPermissionSet != null && permissionSetNames.contains(businessPermissionSet.QualifiedApiName);
+        System.debug('dar: ' + isAdminUser);
+         System.debug('dar: ' + isBusinessUser);
+
+        return isBusinessUser ? 'business' : (isAdminUser ? 'admin' : null);
     }
 
     public class AccountWrapper {
