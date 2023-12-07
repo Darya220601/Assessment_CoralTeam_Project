@@ -17,7 +17,7 @@ export default class AvailableAccounts extends LightningElement {
     @track selectedItem = null;
     error;
     errorMessage;
-    UserPermission = null;
+    userPermission = null;
 
     @wire(MessageContext)
     messageContext;
@@ -38,9 +38,8 @@ export default class AvailableAccounts extends LightningElement {
     connectedCallback() {
         getUserPermissionSetNames()
             .then(result => {
-                this.UserPermission = result;
-                console.log(this.UserPermission);
-                console.log('User Permission Set Information:', result);
+                this.userPermission = result;
+                console.log(this.userPermission);
             })
             .catch(error => {
                 console.error('Error fetching user permission set information:', error);
@@ -49,7 +48,6 @@ export default class AvailableAccounts extends LightningElement {
 
     handleTreeSelect(event) {
         this.selectedItem = event.detail;
-        console.log('Selected Item:', this.selectedItem);
         this.publishLMS();
     }
     
@@ -74,7 +72,7 @@ export default class AvailableAccounts extends LightningElement {
                 recordId: matchingItem.name,
                 type: matchingItem.type
             };
-            console.log('Matching Item Type:', matchingItem.name);
+            console.log('Matching Item Name:', matchingItem.name);
             console.log('Matching Item Type:', matchingItem.type);
             publish(this.messageContext, ACCOUNT_CONTACT_CHANNEL, message);
         }
@@ -83,7 +81,7 @@ export default class AvailableAccounts extends LightningElement {
     get hasNoAccounts() {
         return (
             this.treeItems.length === 0  &&
-            this.UserPermission === BUSINESS_USER
+            this.userPermission === BUSINESS_USER
         );    
     }
 

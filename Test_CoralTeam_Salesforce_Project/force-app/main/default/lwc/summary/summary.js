@@ -15,9 +15,7 @@ export default class Summary extends LightningElement {
     error;
     recordId;
     type;
-    errorMessage;
     @track data;
-    fields = [];
 
     @wire(MessageContext)
     messageContext;
@@ -30,9 +28,10 @@ export default class Summary extends LightningElement {
                 this.error = undefined;
             })
             .catch(error => {
-                this.error = reduceErrors(error).join(', ');
+                this.error = reduceErrors(error);
                 console.log('error ' + this.error);
                 this.data = undefined;
+                showNotification()
             });
     }
 
@@ -75,7 +74,7 @@ export default class Summary extends LightningElement {
         this.dispatchEvent(
             new ShowToastEvent({
                 title: ERROR_TITLE,
-                message: this.errorMessage ? this.errorMessage.toString() : 'Unknown error',
+                message: this.error ? this.error.toString() : 'Unknown error',
                 variant: ERROR_VARIANT
             })
         );
