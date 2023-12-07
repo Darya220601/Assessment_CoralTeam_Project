@@ -1,10 +1,11 @@
 public with sharing class AccountController {
      
-    private static final String ADMIN_PERMISSION_SET_NAME = 'Admin';
-    private static final String BUSINESS_PERMISSION_SET_NAME = 'Business';
-
-    public static User_Permission_Set__mdt adminPermissionSet { get; private set; }
-    public static User_Permission_Set__mdt businessPermissionSet { get; private set; }
+    //private static final String ADMIN_PERMISSION_SET_NAME = 'Admin';
+    //private static final String BUSINESS_PERMISSION_SET_NAME = 'Business';
+    //public static User_Permission_Set__mdt adminPermissionSet { get; private set; }
+    //public static User_Permission_Set__mdt businessPermissionSet { get; private set; }
+    private static final String ADMIN_PERMISSION_SET_NAME = 'Admin_Contacts_Accounts';
+    private static final String BUSINESS_PERMISSION_SET_NAME = 'Business_Contacts_Accounts';
     public static Boolean isAdminUser { get; private set; }
     public static Boolean isBusinessUser { get; private set; }
 
@@ -64,11 +65,13 @@ public with sharing class AccountController {
             permissionSetNames.add(assignment.PermissionSet.Name);
         }
 
-        assignPermissionSets();
+        //assignPermissionSets();
 
-        isAdminUser = adminPermissionSet != null && permissionSetNames.contains(adminPermissionSet.QualifiedApiName);
-        isBusinessUser = businessPermissionSet != null && permissionSetNames.contains(businessPermissionSet.QualifiedApiName);
-
+        //isAdminUser = adminPermissionSet != null && permissionSetNames.contains(adminPermissionSet.QualifiedApiName);
+        //isBusinessUser = businessPermissionSet != null && permissionSetNames.contains(businessPermissionSet.QualifiedApiName);
+        
+        isAdminUser = permissionSetNames.contains(ADMIN_PERMISSION_SET_NAME);
+        isBusinessUser = permissionSetNames.contains(BUSINESS_PERMISSION_SET_NAME);
         return isBusinessUser ? 'business' : (isAdminUser ? 'admin' : null);
     }
 
@@ -93,12 +96,12 @@ public with sharing class AccountController {
         }
     }
 
-    public static void assignPermissionSets() {
+    /*public static void assignPermissionSets() {
         adminPermissionSet = getPermissionSetByName(ADMIN_PERMISSION_SET_NAME);
         businessPermissionSet = getPermissionSetByName(BUSINESS_PERMISSION_SET_NAME);
-    }
+    }*/
 
-    private static User_Permission_Set__mdt getPermissionSetByName(String name) {
+   /*private static User_Permission_Set__mdt getPermissionSetByName(String name) {
         try {
             return [SELECT Id, 
                            QualifiedApiName
@@ -108,7 +111,7 @@ public with sharing class AccountController {
         } catch (QueryException e) {
             return null;
         }
-    }
+    }*/
 
     @AuraEnabled(cacheable=true)
     public static Object getRecordData(String recordId, String type) {
