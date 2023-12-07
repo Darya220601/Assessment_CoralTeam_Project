@@ -1,3 +1,24 @@
+<!-- summary.html -->
 <template>
-    
+    <lightning-card title="Record Details" icon-name="standard:record">
+        <template if:true={data}>
+            <template if:true={typeIsAccount}>
+                <!-- Display Account details -->
+                <p>Name: {data.accountData.accountName}</p>
+                <p>Type: {data.accountData.type}</p>
+                <p>Phone: {data.accountData.phone}</p>
+                <p>Website: {data.accountData.website}</p>
+            </template>
+            <template if:true={typeIsContact}>
+                <!-- Display Contact details -->
+                <p>Name: {data.contactData.contactName}</p>
+                <p>Phone: {data.contactData.phone}</p>
+                <p>Email: {data.contactData.email}</p>
+            </template>
+        </template>
+        <template if:true={error}>
+            <!-- Display error message -->
+            <p class="slds-text-color_error">{error}</p>
+        </template>
+    </lightning-card>
 </template>

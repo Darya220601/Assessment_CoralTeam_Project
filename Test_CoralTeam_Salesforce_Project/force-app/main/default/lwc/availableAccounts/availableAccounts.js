@@ -1,7 +1,7 @@
-import { LightningElement, wire } from 'lwc';
+import { LightningElement, wire, track } from 'lwc';
 import { reduceErrors } from 'c/ldsUtils';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import { publish, MessageContext } from 'lightning/messageService';
+import { publish, MessageContext, releaseMessageContext } from 'lightning/messageService';
 import ACCOUNT_CONTACT_CHANNEL from '@salesforce/messageChannel/AccountsMessageChannel__c';
 import getAccountContactTree from '@salesforce/apex/AccountController.getAccountContactTree';
 import getUserPermissionSetNames from '@salesforce/apex/AccountController.getUserPermissionSetNames';
@@ -13,10 +13,11 @@ const BUSINESS_USER = 'business';
 
 
 export default class AvailableAccounts extends LightningElement {
-    treeItems = [];
-    selectedItem = null;
+    @track treeItems = [];
+    @track selectedItem = null;
     error;
-    hasBusinessUserPermission = null;
+    errorMessage;
+    UserPermission = null;
 
     @wire(MessageContext)
     messageContext;
@@ -31,21 +32,15 @@ export default class AvailableAccounts extends LightningElement {
             console.log(error);
             this.error = error;
             this.errorMessage = reduceErrors(this.error);
-             this.dispatchEvent(
-                 new ShowToastEvent({
-                     title: ERROR_TITLE,
-                     message: this.errorMessage.toString(),
-                     variant: ERROR_VARIANT
-                 })
-             );
+            this.showNotification();
         }
     }
 
     connectedCallback() {
         getUserPermissionSetNames()
             .then(result => {
-                this.hasBusinessUserPermission = result;
-                console.log(this.hasBusinessUserPermission);
+                this.UserPermission = result;
+                console.log(this.UserPermission);
                 console.log('User Permission Set Information:', result);
             })
             .catch(error => {
@@ -56,19 +51,8 @@ export default class AvailableAccounts extends LightningElement {
     handleTreeSelect(event) {
         this.selectedItem = event.detail;
         console.log('Selected Item:', this.selectedItem);
-
-        const matchingItem = this.findMatchingItem(this.selectedItem.name, this.treeItems);
-
-        if (matchingItem) {
-            const message = {
-                recordId: matchingItem.name,
-                type: matchingItem.type
-            };
-            console.log('Matching Item Type:', matchingItem.name);
-            console.log('Matching Item Type:', matchingItem.type);
-            publish(this.messageContext, ACCOUNT_CONTACT_CHANNEL, message);
-        }
-    }    
+        this.publishLMS();
+    }
     
     findMatchingItem(name, items) {
         for (const item of items) {
@@ -84,14 +68,41 @@ export default class AvailableAccounts extends LightningElement {
         return null;
     }
 
+    publishLMS() {
+        const matchingItem = this.findMatchingItem(this.selectedItem.name, this.treeItems);
+        if (matchingItem) {
+            const message = {
+                recordId: matchingItem.name,
+                type: matchingItem.type
+            };
+            console.log('Matching Item Type:', matchingItem.name);
+            console.log('Matching Item Type:', matchingItem.type);
+            publish(this.messageContext, ACCOUNT_CONTACT_CHANNEL, message);
+        }
+    }
+
     get hasNoAccounts() {
         return (
             this.treeItems.length === 0  &&
-            this.hasBusinessUserPermission === BUSINESS_USER
+            this.UserPermission === BUSINESS_USER
         );    
     }
 
     get noAccountsMessage() {
         return NO_ACCOUNTS_MESSAGE;
+    }
+
+    showNotification() {
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: ERROR_TITLE,
+                message: this.errorMessage.toString(),
+                variant: ERROR_VARIANT
+            })
+        );
+    }
+
+    disconnectedCallback() {
+        releaseMessageContext(this.messageContext);
     }
 }
