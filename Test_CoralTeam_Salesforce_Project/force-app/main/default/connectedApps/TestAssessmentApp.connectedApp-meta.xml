@@ -4,7 +4,7 @@
     <label>TestAssessmentApp</label>
     <oauthConfig>
         <callbackUrl>https://buntaiste2-dev-ed.develop.lightning.force.com/</callbackUrl>
-        <consumerKey>3MVG9_kZcLde7U5o6vy..ixf7DhRgmjUZzZnF03yA8Ran0QslZX7Wl5WXeFxhgsJLLbV19Rp1oMUoEsU2eO3y</consumerKey>
+        <consumerKey>3MVG9_kZcLde7U5o6vy..ixf7DnQwtgmQ3Z.ap_bd0yewYJ5AAqf5OLUa_eAbG3DDsGVzV7haErdGl2Kdwbee</consumerKey>
         <isAdminApproved>false</isAdminApproved>
         <isClientCredentialEnabled>false</isClientCredentialEnabled>
         <isCodeCredentialEnabled>false</isCodeCredentialEnabled>
