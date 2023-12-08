@@ -2,10 +2,9 @@
 public class AccountRestResourceTest {
     
     @isTest static void testCreateCase() {
-        Id accId = AccountRestResource.createNewAccount(
-            'Test Acc', '+4878345632', 'https://testacc.systems.com');
+        Id accId = AccountRestResource.createNewAccount('Test Acc', '+4878345632', 'https://testacc.systems.com');
         
-       	Assert.isTrue(accId != null);
+       	Assert.isTrue(accId != null, 'Account was not created');
         
         Account account = [SELECT Id,
                                   Phone,
