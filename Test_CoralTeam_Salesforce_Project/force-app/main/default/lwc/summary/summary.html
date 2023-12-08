@@ -5,19 +5,19 @@
             <div class="account-section">
                 <div class="header">Account Info</div>
                 <div class="content">
-                    <p class="label-text">Account Name: <span class="gray-text">{data.accountData.accountName}</span></p>
-                    <p class="label-text">Type: <span class="gray-text">{data.accountData.type}</span></p>
-                    <p class="label-text">Phone: <span class="gray-text">{data.accountData.phone}</span></p>
-                    <p class="label-text">Website: <a href = {data.accountData.website}>{data.accountData.website}</a></p>
+                    <p class="label-text">Account Name: <span class="gray-text">{accountName}</span></p>
+                    <p class="label-text">Type: <span class="gray-text">{accountType}</span></p>
+                    <p class="label-text">Phone: <span class="gray-text">{accountPhone}</span></p>
+                    <p class="label-text">Website: <a href = {accountWebsite}>{accountWebsite}</a></p>
                 </div>
             </div>    
             <template if:true={typeIsContact}>
                 <div class="contact-section">
                     <div class="header">Contact Info</div>
                     <div class="content">
-                        <p class="label-text">Contact Name: <span class="gray-text">{data.contactData.contactName}</span></p>
-                        <p class="label-text">Phone: <span class="gray-text">{data.contactData.phone}</span></p>
-                        <p class="label-text">Email: <span class="gray-text">{data.contactData.email}</span></p>
+                        <p class="label-text">Contact Name: <span class="gray-text">{contactName}</span></p>
+                        <p class="label-text">Phone: <span class="gray-text">{contactPhone}</span></p>
+                        <p class="label-text">Email: <span class="gray-text">{contactEmail}</span></p>
                     </div>
                 </div>
             </template>

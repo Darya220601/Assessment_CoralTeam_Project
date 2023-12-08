@@ -3,11 +3,38 @@ import ACCOUNT_CONTACT_CHANNEL from '@salesforce/messageChannel/AccountsMessageC
 import { subscribe, unsubscribe, APPLICATION_SCOPE, MessageContext } from 'lightning/messageService';
 import { reduceErrors } from 'c/ldsUtils';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import getRecordData from '@salesforce/apex/AccountController.getRecordData';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+import ACCOUNT_NAME_FIELD from '@salesforce/schema/Account.Name';
+import ACCOUNT_TYPE_FIELD from '@salesforce/schema/Account.Type';
+import ACCOUNT_PHONE from '@salesforce/schema/Account.Phone';
+import ACCOUNT_WEBSITE from '@salesforce/schema/Account.Website';
+import ACCOUNT_NAME_FIELD_FROM_CONTACT from '@salesforce/schema/Contact.Account.Name';
+import ACCOUNT_TYPE_FIELD_FROM_CONTACT from '@salesforce/schema/Contact.Account.Type';
+import ACCOUNT_PHONE_FROM_CONTACT from '@salesforce/schema/Contact.Account.Phone';
+import ACCOUNT_WEBSITE_FROM_CONTACT from '@salesforce/schema/Contact.Account.Website';
+import CONTACT_NAME_FIELD from '@salesforce/schema/Contact.Name';
+import CONTACT_PHONE_FIELD from '@salesforce/schema/Contact.Phone';
+import CONTACT_EMAIL_FIELD from '@salesforce/schema/Contact.Email';
 
 const ERROR_TITLE   = 'Error';
 const ERROR_VARIANT = 'error';
 const CONTACT_TYPE = 'Contact';
+
+const ACCOUNT_FIELDS = [
+    ACCOUNT_NAME_FIELD,
+    ACCOUNT_TYPE_FIELD,
+    ACCOUNT_PHONE,
+    ACCOUNT_WEBSITE
+];
+const CONTACT_FIELDS = [
+    CONTACT_NAME_FIELD,
+    CONTACT_PHONE_FIELD,
+    CONTACT_EMAIL_FIELD,
+    ACCOUNT_NAME_FIELD_FROM_CONTACT, 
+    ACCOUNT_TYPE_FIELD_FROM_CONTACT,
+    ACCOUNT_PHONE_FROM_CONTACT,
+    ACCOUNT_WEBSITE_FROM_CONTACT
+];
 
 export default class Summary extends LightningElement {
 
@@ -20,19 +47,16 @@ export default class Summary extends LightningElement {
     @wire(MessageContext)
     messageContext;
 
-    loadData() {
-        getRecordData({ recordId: this.recordId, type: this.type })
-            .then(result => {
-                this.data = result;
-                console.log('success ' + this.data);
-                this.error = undefined;
-            })
-            .catch(error => {
-                this.error = reduceErrors(error);
-                console.log('error ' + this.error);
-                this.data = undefined;
-                showNotification()
-            });
+    @wire(getRecord, { recordId: '$recordId', fields: '$fields' })
+    wiredRecord({ error, data }) {
+        if (data) {
+            this.data = data;
+            this.error = undefined;
+        } else if (error) {
+            this.error = reduceErrors(error);
+            this.data = undefined;
+            this.showNotification();
+        }
     }
 
     handleSubscribe() {
@@ -49,7 +73,6 @@ export default class Summary extends LightningElement {
                 }
                 this.recordId = message.recordId;
                 this.type = message.type; 
-                this.loadData()
             },
             { 
                 scope: APPLICATION_SCOPE
@@ -84,4 +107,35 @@ export default class Summary extends LightningElement {
         return this.type === CONTACT_TYPE;
     }
 
+    get accountName() {
+        return this.typeIsContact ? getFieldValue(this.data, ACCOUNT_NAME_FIELD_FROM_CONTACT) : getFieldValue(this.data, ACCOUNT_NAME_FIELD);
+    }
+
+    get accountType() {
+        return this.typeIsContact ? getFieldValue(this.data, ACCOUNT_TYPE_FIELD_FROM_CONTACT) : getFieldValue(this.data, ACCOUNT_TYPE_FIELD);
+    }
+
+    get accountPhone() {
+        return this.typeIsContact ? getFieldValue(this.data, ACCOUNT_PHONE_FROM_CONTACT) : getFieldValue(this.data, ACCOUNT_PHONE);
+    }
+
+    get accountWebsite() {
+        return this.typeIsContact ? getFieldValue(this.data, ACCOUNT_WEBSITE_FROM_CONTACT) : getFieldValue(this.data, ACCOUNT_WEBSITE);
+    }
+
+    get contactName() {
+        return getFieldValue(this.data, CONTACT_NAME_FIELD);
+    }
+
+    get contactPhone() {
+        return getFieldValue(this.data, CONTACT_PHONE_FIELD);
+    }
+
+    get contactEmail() {
+        return getFieldValue(this.data, CONTACT_EMAIL_FIELD);
+    }
+
+    get fields() {
+        return this.typeIsContact ? CONTACT_FIELDS : ACCOUNT_FIELDS;
+    }
 }
