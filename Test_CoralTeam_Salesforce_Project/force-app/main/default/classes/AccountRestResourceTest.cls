@@ -1,7 +1,7 @@
 @IsTest
 public class AccountRestResourceTest {
     
-    @isTest static void testCreateCase() {
+    @isTest static void createNewAccountTest() {
         Id accId = AccountRestResource.createNewAccount('Test Acc', '+4878345632', 'https://testacc.systems.com');
         
        	Assert.isTrue(accId != null, 'Account was not created');
