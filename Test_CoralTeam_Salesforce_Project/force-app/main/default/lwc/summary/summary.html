@@ -1,0 +1,31 @@
+<template>
+    <lightning-card title="Record Details" icon-name="standard:record" class="card-container">
+        <template if:true={data}>
+            <div class="container">
+            <div class="account-section">
+                <div class="header">Account Info</div>
+                <div class="content">
+                    <p class="label-text">Account Name: <span class="gray-text">{accountName}</span></p>
+                    <p class="label-text">Type: <span class="gray-text">{accountType}</span></p>
+                    <p class="label-text">Phone: <span class="gray-text">{accountPhone}</span></p>
+                    <p class="label-text">Website: <a href = {accountWebsite}>{accountWebsite}</a></p>
+                </div>
+            </div>    
+            <template if:true={typeIsContact}>
+                <div class="contact-section">
+                    <div class="header">Contact Info</div>
+                    <div class="content">
+                        <p class="label-text">Contact Name: <span class="gray-text">{contactName}</span></p>
+                        <p class="label-text">Phone: <span class="gray-text">{contactPhone}</span></p>
+                        <p class="label-text">Email: <span class="gray-text">{contactEmail}</span></p>
+                    </div>
+                </div>
+            </template>
+        </div>
+        </template>
+        <template if:true={error}>
+            <p class="slds-text-color_error">{error}</p>
+        </template>
+    </lightning-card>
+</template>
+
