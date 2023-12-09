@@ -102,7 +102,10 @@ private class AccountControllerTest {
     
     @isTest
     static void testGetAccountContactTree_BusinessUser() {
-        User businessUser = [SELECT Id FROM User WHERE Username = 'businessuser@sunsystems.com' LIMIT 1];
+        User businessUser = [SELECT Id 
+                             FROM User 
+                             WHERE Username = 'businessuser@sunsystems.com' 
+                             LIMIT 1];
         
         Test.startTest();
         System.runAs(businessUser) {
